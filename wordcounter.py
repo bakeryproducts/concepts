@@ -1,9 +1,12 @@
+#counts words in data from avito.ru url
+
 import requests
 from bs4 import BeautifulSoup
 import operator
 
 
 def getter(url):
+    # gets url of page and collects string with certained class and looks for words in 
     news = []
     data = requests.get(url).text
     soup = BeautifulSoup(data, "html.parser")
@@ -16,6 +19,7 @@ def getter(url):
 
 
 def clean_up(data):
+    # cleaning up data from getter()
     clean_data = []
     list = '!@#$%^&*()_-=+~?><":\'\"/|'
     for word in data:
@@ -27,6 +31,7 @@ def clean_up(data):
 
 
 def counter(data):
+    #creating a dictionary keys = words; values = word.frequency
     dic = {}
     for word in data:
         if word in dic:
