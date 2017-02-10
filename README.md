@@ -1,1 +1,1 @@
-chunks of usable code for later implying
+yeah without any annotation 
