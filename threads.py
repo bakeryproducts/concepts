@@ -1,3 +1,4 @@
+# this is kinda lame threads example, look around for threadsnqueue.py!
 import threading
 
 
