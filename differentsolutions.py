@@ -1,3 +1,7 @@
+# Problem: choose subarray from array
+# subarray lenth = maxlen; 
+# with maximum production of elements  
+# 
 import time
 import random
 
