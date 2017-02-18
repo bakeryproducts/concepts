@@ -10,7 +10,7 @@ def getter(url):
     news = []
     data = requests.get(url).text
     soup = BeautifulSoup(data, "html.parser")
-    for link in soup.findAll('a', {'class': 'item-description-title-link'}):
+    for link in soup.findAll('a', {'class':'item-description-title-link'}):
         headline = link.string.lower().split()
         for word in headline:
             news.append(word)
@@ -44,4 +44,4 @@ def counter(data):
 url = 'https://www.avito.ru/moskva'
 counted = counter(getter(url))
 for key, value in sorted(counted.items(), key=operator.itemgetter(1)):
-    print(key, value)
+    print(key,value)
