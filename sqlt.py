@@ -1,3 +1,4 @@
+# basics from Sqlite creating db, adding stuff, update and delete/ draw to matplotlib
 import sqlite3
 import time
 import datetime
