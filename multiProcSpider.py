@@ -4,6 +4,9 @@ import bs4 as bs
 import requests
 import random
 import string
+from requests.adapters import HTTPAdapter
+
+#s = requests.Session()
 
 
 def url_gen():
@@ -13,7 +16,8 @@ def url_gen():
 
 
 def exlist(link):  # this is probably bad idea
-    list = ['mailto:', 'tel:', 'javascript:', 'skype:', '.ppt', '.jpg', 'doc']
+    list = ['mailto:', 'tel:', 'javascript:', 'skype:',
+            '.ppt', '.jpg', '.doc', '#', '.png', '.gif', '.rar', '.zip', 'tg:', '*', '.pdf', 'mp4']
     for el in list:
         if el in link:
             return True
@@ -23,13 +27,17 @@ def exlist(link):  # this is probably bad idea
 def get_links(url):
     try:
         print(url)
+        #s.mount(url, HTTPAdapter(max_retries=2))
         resp = requests.get(url)
+        #resp = s.get(url)
 
         soup = bs.BeautifulSoup(resp.text, 'lxml')
         body = soup.body
+
         links = [link.get('href') for link in body.find_all('a', href=True) if not exlist(link.get('href').lower())]
         links = [urljoin(url, link) for link in links]
         # links = [str(link.encode('utf-8')) for link in links]
+        print(' get links',links)
         return links
     except Exception as e:
         print(e)
@@ -37,14 +45,16 @@ def get_links(url):
 
 
 def get_dom(url):
-    dom = url.split('//')[-1].split('/')[0]
+    dom = url.split('//')[1].split('/')[0]
     return dom
 
 
 def main():
-    count = 3
-    p = Pool(processes=5)
-    parse_us = [url_gen() for _ in range(count)]
+    count = 2
+    p = Pool(processes=2)
+    # parse_us = [url_gen() for _ in range(count)]
+    parse_us = ['http://yod.ru', 'http://uzg.ru']
+
     visited_domain = []
     visited_urls = []
     print(parse_us)
@@ -55,8 +65,8 @@ def main():
         data = p.map(get_links, parse_us)
         data = [url for site in data for url in site]
         data = list(set(data))
-
-        parse_us = [url for url in data if url not in visited_urls]
+        print('1')
+        parse_us = [url for url in data if url not in visited_urls and get_dom(url) not in visited_domain]
         visited_urls.extend(parse_us)
         new_dom = ([get_dom(url) for url in parse_us if get_dom(url) not in visited_domain])
         visited_domain.extend(list(set(new_dom)))
