@@ -13,7 +13,7 @@ def url_gen():
 
 
 def exlist(link):  # this is probably bad idea
-    list = ['mailto:', 'tel:', 'javascript:']
+    list = ['mailto:', 'tel:', 'javascript:', 'skype:', '.ppt', '.jpg', 'doc']
     for el in list:
         if el in link:
             return True
@@ -22,7 +22,9 @@ def exlist(link):  # this is probably bad idea
 
 def get_links(url):
     try:
+        print(url)
         resp = requests.get(url)
+
         soup = bs.BeautifulSoup(resp.text, 'lxml')
         body = soup.body
         links = [link.get('href') for link in body.find_all('a', href=True) if not exlist(link.get('href').lower())]
@@ -40,33 +42,36 @@ def get_dom(url):
 
 
 def main():
-    count = 1
-    p = Pool(processes=2)
+    count = 3
+    p = Pool(processes=5)
     parse_us = [url_gen() for _ in range(count)]
     visited_domain = []
     visited_urls = []
     print(parse_us)
+    fd = open('visitedDoms.txt', 'w')
+    fu = open('visitedUrls.txt', 'w')
+
     while 'www.youtube.com' not in visited_domain and len(parse_us) > 0 and count < 10:
         data = p.map(get_links, parse_us)
         data = [url for site in data for url in site]
         data = list(set(data))
-        with open('testingurl.txt', 'w') as f:
-            f.write('\n'.join(data))
 
         parse_us = [url for url in data if url not in visited_urls]
         visited_urls.extend(parse_us)
-        visited_domain.extend([get_dom(url) for url in parse_us if get_dom(url) not in visited_domain])
-        if len(parse_us)>100:
-            parse_us=parse_us[:100]
+        new_dom = ([get_dom(url) for url in parse_us if get_dom(url) not in visited_domain])
+        visited_domain.extend(list(set(new_dom)))
+        # if len(parse_us)>50:
+        #     parse_us=parse_us[:50]
 
+        fd.write('\n'.join(list(set(new_dom))))
+        fu.write('\n'.join(parse_us))
 
         print(len(data), ' urls in data; new ones: ', parse_us)
-
         count += 1
 
-    with open('visited.txt', 'w') as f:
-        f.write('\n'.join(visited_domain))
     p.close()
+    fd.close()
+    fu.close()
 
 
 if __name__ == '__main__':
