@@ -70,9 +70,11 @@ dis.dis('first,*rest,last = (1,2,3)')
 
 def wrapper():
     def identity(x):
+        print('im id')
         return x
 
     def dedentity(y):
+        print('im de')
         return y
 
     return dedentity
@@ -95,3 +97,19 @@ def make_min(*, lo, hi):
 
 boundmin = make_min(lo=3, hi=10)
 print(boundmin(*get_ls()))
+
+
+def cell(val=None):
+    def get():
+        return val
+
+    def set(upd):
+        nonlocal val
+        val = upd
+
+    return get, set
+
+
+ge, se = cell(13)
+print(ge(), se(69), ge())
+print(ge())
