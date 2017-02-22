@@ -70,7 +70,7 @@ def identity(x):
 # print(identity.__doc__)
 # -----------------timethis-----------
 
-def timethis(func=None, *, handle_iter=100):
+def timethis(func=None, *, handle_iter=10):
     if func is None:
         return lambda func: timethis(func, handle_iter=handle_iter)
 
@@ -94,5 +94,54 @@ def exmp(x):
     return sum(range(x))
 
 
-print(exmp(10 ** 6))
-print(timethis(sum, handle_iter=5)(range(10 ** 6)))
+#
+# print(exmp(10 ** 6))
+# print(timethis(sum, handle_iter=5)(range(10 ** 6)))
+
+def memoized(func):  # cache func res , speedup
+    cache = {}
+
+    @wraps(func)
+    def inner(*args, **kwargs):
+        key = args + tuple(sorted(kwargs.items()))
+        if key not in cache:
+            cache[key] = func(*args, **kwargs)
+        return cache[key]
+
+    return inner
+
+
+@memoized
+@timethis
+def exmp2(x):
+    return sum(range(x))
+
+
+#
+# start=time.perf_counter()
+# print('res is {}, worked for {} s'.format(memoized(exmp)(10**7),time.perf_counter()-start))
+# start=time.perf_counter()
+# print('res is {}, worked for {} s'.format(memoized(exmp)(10**7),time.perf_counter()-start))
+#
+# print(exmp2(10**7))
+# print(exmp2(10**7))
+# print(exmp2(10**6))
+# print(exmp2(10**6))
+#
+
+def squ(func):
+    return lambda x: func(x * x)
+
+
+def adds(func):
+    return lambda x: func(x + 1)
+
+
+@adds                   # order of decorators matter!
+@squ                    # ex3 = adds(squ(ex3)
+def ex3(x):
+    return x
+
+print(ex3(2))
+# print(squ(range)(2))
+
