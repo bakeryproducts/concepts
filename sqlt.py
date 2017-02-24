@@ -47,7 +47,7 @@ def graph_data():
     dates = []
     values = []
     for row in cpdata:
-        # print(row)
+        print(row)
         dates.append(datetime.datetime.fromtimestamp(row[0]))
         values.append(row[1])
 
@@ -70,16 +70,16 @@ def del_and_update():
     [print(row) for row in c.fetchall()]
 
 
-# create_table()
+#create_table()
 # data_entry()
 #
 # for i in range(10):
 #     dynamic_data_entry()
 #     time.sleep(1)
 
-# read_from_db()
-# graph_data()
-del_and_update()
+read_from_db()
+graph_data()
+#del_and_update()
 
 c.close()
 conn.close()
