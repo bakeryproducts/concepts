@@ -64,5 +64,19 @@ plt.title(r'$\int \, \sin(x) \, dx$')           # oh my that int sign!
 
 plt.legend(['numeric', 'actual'])
 
-plt.show()
+#plt.show()
 #-------------------------------------------------------------------
+
+r = np.arange(6).reshape(2,3)
+print(r,r[-1,-1])
+
+r = np.arange(30).reshape(5,6)
+print(r%3==0)                       # mask for next line: select all elements %3==0
+print(r[r%3==0])
+r[r%3==0]=-11
+#print (np.where(r%3==0))            # returns tuple of indexes which in pairs get r[i,j] that matches condition
+r[3,3]=-27
+print(r.argmin())
+indc = np.unravel_index(r.argmin(),r.shape) #returns indexes in multidim array from linear position
+print(indc)
+
