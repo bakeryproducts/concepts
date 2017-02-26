@@ -6,7 +6,7 @@ a = np.array([1, 2, 3, 4])
 b = np.array([5, 6, 7, 8])
 
 print(a * b)
-print(a.dot(b))
+print(a.dot(b))             # dot production
 print(a / b)
 print(np.sin(a))
 
@@ -27,7 +27,7 @@ plt.figure()
 plt.subplot(2, 1, 1)  # subplot(2 - rows, 1 - columns,1 - active,  used to draw now)
 plt.scatter(x, y, size, col, cmap='jet')  # coors, size , color, colormap='
 plt.colorbar()
-# hold(False)
+# hold(False)           # look it up!
 
 # plt.figure()
 # plt.close('all')
@@ -39,7 +39,6 @@ a.fill(0)  # fill with 0, faster then a[:]=0
 print(a)
 a = np.zeros(5)
 print(a)
-
 
 # lets calculate derivative of Sin(x), shall we?------------------------
 # hell with it let do integration also
@@ -56,27 +55,26 @@ integ = np.cumsum(dx * avg_h)
 
 plt.subplot(1, 2, 1)
 plt.plot(a[1:], der, 'rx', a, np.cos(a), 'b-')
-plt.title(r"$\rm{Derivative\ of}\ sin(x)$")     # LaTeX mthfckers!!
+plt.title(r"$\rm{Derivative\ of}\ sin(x)$")  # LaTeX mthfckers!!
 
 plt.subplot(1, 2, 2)
 plt.plot(a[1:], integ, 'rx', a, np.cos(0) - np.cos(a), 'b-')
-plt.title(r'$\int \, \sin(x) \, dx$')           # oh my that int sign!
+plt.title(r'$\int \, \sin(x) \, dx$')  # oh my that int sign!
 
 plt.legend(['numeric', 'actual'])
 
-#plt.show()
-#-------------------------------------------------------------------
+# plt.show()
+# -------------------------------------------------------------------
+# array of given size: reshape
+r = np.arange(6).reshape(2, 3)
+print(r, r[-1, -1])
 
-r = np.arange(6).reshape(2,3)
-print(r,r[-1,-1])
-
-r = np.arange(30).reshape(5,6)
-print(r%3==0)                       # mask for next line: select all elements %3==0
-print(r[r%3==0])
-r[r%3==0]=-11
-#print (np.where(r%3==0))            # returns tuple of indexes which in pairs get r[i,j] that matches condition
-r[3,3]=-27
+r = np.arange(30).reshape(5, 6)
+print(r % 3 == 0)  # mask for next line: select all elements %3==0
+print(r[r % 3 == 0])
+r[r % 3 == 0] = -11
+# print (np.where(r%3==0))            # returns tuple of indexes which in pairs get r[i,j] that matches condition
+r[3, 3] = -27
 print(r.argmin())
-indc = np.unravel_index(r.argmin(),r.shape) #returns indexes in multidim array from linear position
+indc = np.unravel_index(r.argmin(), r.shape)  # returns indexes in multidim array from linear position
 print(indc)
-
