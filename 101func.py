@@ -1,4 +1,4 @@
-# func min
+# function basics from youtube / hohol lessons, advanced min function
 import random
 import dis
 
