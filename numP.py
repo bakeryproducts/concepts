@@ -78,3 +78,4 @@ r[3, 3] = -27
 print(r.argmin())
 indc = np.unravel_index(r.argmin(), r.shape)  # returns indexes in multidim array from linear position
 print(indc)
+
