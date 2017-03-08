@@ -9,7 +9,7 @@ def PolyArea(poly):
     return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
 
 
-def DropPoleB(x0, y0, *, heiB=1, lenB=2):
+def DropPoleB(x0, y0, *, heiB=1., lenB=2.):
     poleB = np.array([[0, 0], [0, heiB], [lenB, heiB], [lenB, 0]], dtype=float)
     poleB[:, 0] += x0
     poleB[:, 1] += y0
@@ -25,8 +25,7 @@ def drawpoly(poly, splot, clr=None, al=.5):
 
 fig, ax = plt.subplots()
 polygons = []
-
-n = 120
+n = 100
 intervalX, intervalY = 20, 15
 lenA, heiA = 8, 4
 
@@ -35,29 +34,42 @@ targetA = np.array([[0, 0], [0, heiA], [lenA, heiA], [lenA, 0]], dtype=float)
 targetA[:, 0] += x0A
 targetA[:, 1] += y0A
 polygonA = Polygon(targetA)
-print(PolyArea(polygonA))
+targetarea=PolyArea(polygonA)
+print('Area of target is {}'.format(targetarea))
 drawpoly(polygonA, ax, clr='g', al=1)
 
-for i in range(n):
+for _ in range(n):
     xpoleB, ypoleB = intervalX * np.random.rand(), intervalY * np.random.rand()
-    polygonB = Polygon(DropPoleB(xpoleB, ypoleB))
+    polygonB = Polygon(DropPoleB(xpoleB, ypoleB,heiB=1,lenB=2))
     polygons.append(polygonB)
-    drawpoly(polygonB, ax, al=.2)
+    drawpoly(polygonB, ax, al=.4)
 
 hits = [polygonA.intersection(poly) for poly in polygons]
 damagemap = [hit for hit in hits if hit.geom_type == 'Polygon']
 
-unionarea = damagemap[0]
-for area in damagemap:
-    unionarea = area.union(unionarea)
+try:
+    unionarea = damagemap[0]
+except IndexError:
+    print('There is no damage to target!')
+else:
 
-drawpoly(unionarea, ax, clr='r', al=.9)
+    for area in damagemap:
+        unionarea = area.union(unionarea)
+    drawpoly(unionarea, ax, clr='r', al=.9)
+    totalarea=0
+    stot=0
+    try:
+        for area in unionarea:
+            totalarea+=PolyArea(area)
+            stot+=area.area
+            #print(area.area)
+    except TypeError:
+        totalarea=PolyArea(unionarea)
+        stot = unionarea.area
+    print('Damaged area is {:.5f} ({:.5f})\npercentage: {:.3f} %'.format(
+        totalarea,stot,100 - 100 * (targetarea - totalarea) / targetarea))
 
-totalarea=0
-for area in unionarea:
-    totalarea+=PolyArea(area)
 
-print(totalarea)
 
 ax.set_xlim([0, intervalX])
 ax.set_ylim([0, intervalY])
