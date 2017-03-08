@@ -1,12 +1,11 @@
 # Polygon from matplotlib and Area
-from shapely.geometry import Polygon as ppgon
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
-from matplotlib.collections import PatchCollection
+from descartes import PolygonPatch
+from shapely.geometry import Polygon
 
-
-def PolyArea(x, y):
+def PolyArea(poly):
+    x,y = poly.exterior.xy
     return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
 
 
@@ -16,64 +15,49 @@ def DropPoleB(x0, y0, *, heiB=1, lenB=2):
     poleB[:, 1] += y0
     return poleB
 
-fig, ax = plt.subplots()
 
+def drawpoly(poly, splot, clr=None, al=.5):
+    if clr is None:
+        clr = np.random.rand(3, 1)
+    polypatch = PolygonPatch(poly, color=clr, alpha=al)
+    splot.add_patch(polypatch)
+
+
+fig, ax = plt.subplots()
 polygons = []
-shapgons=[]
-n = 150
+
+n = 120
 intervalX, intervalY = 20, 15
 lenA, heiA = 8, 4
-
 
 x0A, y0A = intervalX / 2 - lenA / 2, intervalY / 2 - heiA / 2
 targetA = np.array([[0, 0], [0, heiA], [lenA, heiA], [lenA, 0]], dtype=float)
 targetA[:, 0] += x0A
 targetA[:, 1] += y0A
-polygonA = Polygon(targetA, True)
-polygons.append(polygonA)
-shapA = ppgon(targetA)
-print(PolyArea(targetA[:,0],targetA[:,1]))
+polygonA = Polygon(targetA)
+print(PolyArea(polygonA))
+drawpoly(polygonA, ax, clr='g', al=1)
 
 for i in range(n):
     xpoleB, ypoleB = intervalX * np.random.rand(), intervalY * np.random.rand()
-    polygonB = Polygon(DropPoleB(xpoleB, ypoleB), True)
+    polygonB = Polygon(DropPoleB(xpoleB, ypoleB))
     polygons.append(polygonB)
-    shapgons.append(ppgon(DropPoleB(xpoleB, ypoleB)))
+    drawpoly(polygonB, ax, al=.2)
 
-p = PatchCollection(polygons, alpha=.5)
-colors = 250 * np.random.rand(len(polygons))
-p.set_array(np.array(colors))
+hits = [polygonA.intersection(poly) for poly in polygons]
+damagemap = [hit for hit in hits if hit.geom_type == 'Polygon']
 
-ax.add_collection(p)
+unionarea = damagemap[0]
+for area in damagemap:
+    unionarea = area.union(unionarea)
 
-for poly in shapgons:
-    #pp = np.array(poly.get_xy())
-    #print(PolyArea(pp[:, 0], pp[:, 1]))
-    # x,y=poly.exterior.xy
-    # ax.plot(x, y, color='#6699cc', alpha=0.9,
-    #     linewidth=3, solid_capstyle='round', zorder=2)
-    pass
-inters=[shapA.intersection(p1) for p1 in shapgons]
-bigpoly=[]
-for el in inters:
-    if el.geom_type == 'Polygon':
-        x,y=el.exterior.xy
-        #ax.plot(x,y,linewidth=1,color='r')
-        bigpoly.append(el)
+drawpoly(unionarea, ax, clr='r', al=.9)
 
-sum=bigpoly[0]
+totalarea=0
+for area in unionarea:
+    totalarea+=PolyArea(area)
 
-for el in bigpoly:
-    sum=el.union(sum)
-totarea=0
-
-for p in sum:
-    x,y = p.exterior.xy
-    ax.plot(x,y,color='r')
-    totarea+=PolyArea(x,y)
-
-
-print(totarea)
+print(totalarea)
 
 ax.set_xlim([0, intervalX])
 ax.set_ylim([0, intervalY])
