@@ -25,7 +25,7 @@ def drawpoly(poly, splot, clr=None, al=.5):
 
 fig, ax = plt.subplots()
 polygons = []
-n = 100
+n = 10000
 intervalX, intervalY = 20, 15
 lenA, heiA = 8, 4
 
@@ -35,6 +35,7 @@ targetA[:, 0] += x0A
 targetA[:, 1] += y0A
 polygonA = Polygon(targetA)
 targetarea=PolyArea(polygonA)
+polearea=2
 print('Area of target is {}'.format(targetarea))
 drawpoly(polygonA, ax, clr='g', al=1)
 
@@ -42,11 +43,11 @@ for _ in range(n):
     xpoleB, ypoleB = intervalX * np.random.rand(), intervalY * np.random.rand()
     polygonB = Polygon(DropPoleB(xpoleB, ypoleB,heiB=1,lenB=2))
     polygons.append(polygonB)
-    drawpoly(polygonB, ax, al=.4)
+    #drawpoly(polygonB, ax, al=.4)
 
 hits = [polygonA.intersection(poly) for poly in polygons]
 damagemap = [hit for hit in hits if hit.geom_type == 'Polygon']
-
+ratio=np.zeros(len(polygons)-len(damagemap))
 try:
     unionarea = damagemap[0]
 except IndexError:
@@ -55,6 +56,7 @@ else:
 
     for area in damagemap:
         unionarea = area.union(unionarea)
+        ratio=np.append(ratio,area.area/polearea)
     drawpoly(unionarea, ax, clr='r', al=.9)
     totalarea=0
     stot=0
@@ -70,7 +72,18 @@ else:
         totalarea,stot,100 - 100 * (targetarea - totalarea) / targetarea))
 
 
+ratio=ratio.round(decimals=1)
+
+uni,counts = np.unique(ratio,return_counts=True)
+a=dict(zip(uni,counts))
+
+print(a)
 
 ax.set_xlim([0, intervalX])
 ax.set_ylim([0, intervalY])
+
+plt.figure()
+plt.bar(list(a.keys()),list(a.values()),width=.1)
+
+
 plt.show()
