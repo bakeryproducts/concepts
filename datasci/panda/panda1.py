@@ -21,7 +21,7 @@ web_stats={'day' : [1,2,3,4,5],
 df = pd.DataFrame(web_stats)    # converts to table
 
 print(df)
-print(df.tail(2))       # return last 2 of data
+#print(df.tail(2))       # return last 2 of data
 #df = web.DataReader('XOM','yahoo',start,end)
 
 #print(df.head())        # head of data, like first five rows or smth
@@ -29,17 +29,17 @@ print(df.tail(2))       # return last 2 of data
 
 newdf = df.set_index('day')         # as said
 #df.set_index('day',inplace=True)   # set index in df themself
-print(newdf)
-print(df['rate'])            # calls column
-print(df.rate)               # calls like attr
-print(df[['day','rate']])    # several c's
+#print(newdf)
+#print(df['rate'])            # calls column
+#print(df.rate)               # calls like attr
+#print(df[['day','rate']])    # several c's
 
-print(df.rate.tolist())
-a = np.array(df[['day','rate']])
-print(a)
+#print(df.rate.tolist())
+#a = np.array(df[['day','rate']])
+#print(a)
 
-custdf = pd.DataFrame(a)
-print(custdf)
+#custdf = pd.DataFrame(a)
+#print(custdf)
 
 #plt.show()
 
