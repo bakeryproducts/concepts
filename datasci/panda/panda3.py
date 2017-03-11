@@ -14,12 +14,11 @@ import numpy as np
 
 # read save from quandl.get csv file
 
-df = pd.read_csv('test.csv',usecols=(1,2,4,5))
-#print(df.head(2))
-newdf = df[['date','high','low']]
+df = pd.read_csv('test.csv', usecols=(1, 2, 4, 5))
+# print(df.head(2))
+newdf = df[['date', 'high', 'low']]
 
-
-s = pd.Series(['newdate',55,35],index = ['date','high','low'])
+s = pd.Series(['newdate', 55, 35], index=['date', 'high', 'low'])
 print(newdf.tail(2))
-moddf = newdf.append(s,ignore_index=True)
+moddf = newdf.append(s, ignore_index=True)
 print(moddf.tail(2))
