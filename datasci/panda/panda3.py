@@ -4,14 +4,20 @@ import quandl
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+
+# this is part for api quandl
+
 # api_key = open('api.txt','r').read()
 # quandl.ApiConfig.api_key=api_key
 # df = quandl.get_table("WIKI/PRICES")
 # df.to_csv('test.csv')
 
+# read save from quandl.get csv file
+
 df = pd.read_csv('test.csv',usecols=(1,2,4,5))
 #print(df.head(2))
 newdf = df[['date','high','low']]
+
 
 s = pd.Series(['newdate',55,35],index = ['date','high','low'])
 print(newdf.tail(2))
