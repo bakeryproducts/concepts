@@ -1,4 +1,4 @@
-# merging and joining dataframes ls6
+# merging and joining dataframes
 
 import pandas as pd
 

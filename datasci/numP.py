@@ -1,4 +1,4 @@
-#   basically numpy and matplotlib
+#   basically numpy and matplotlib (+LaTeX)
 import numpy as np
 import matplotlib.pyplot as plt
 
