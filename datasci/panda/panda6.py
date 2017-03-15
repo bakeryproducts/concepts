@@ -1,3 +1,4 @@
+# HPI dataframe loaded from quandle
 import quandl
 import pandas as pd
 import pickle
