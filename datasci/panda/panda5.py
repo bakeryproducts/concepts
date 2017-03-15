@@ -1,4 +1,4 @@
-# quandl pickle pandas
+# quandl pickle pandas : saving pd as pickle
 
 import pandas as pd
 import quandl
@@ -9,13 +9,13 @@ main_df = pd.DataFrame()
 
 api_key = open('api.txt','r').read()
 quandl.ApiConfig.api_key=api_key
-df1 = quandl.get('FMAC/HPI_KILTX')
-df2 = quandl.get('FMAC/HPI_KANMO')
+df1 = quandl.get('FMAC/HPI_KILTX')    # some random data1
+df2 = quandl.get('FMAC/HPI_KANMO')    #             data2
 main_df = df1
 #
 # df_li =[df1,df2]
 # for df in df_li
-merged = df1.join(df2,lsuffix='_1',rsuffix='_2')
+merged = df1.join(df2,lsuffix='_1',rsuffix='_2')  # merging with same column Value
 
 pickle_out = open('picklesaveDF','wb')
 pickle.dump(merged,pickle_out)
