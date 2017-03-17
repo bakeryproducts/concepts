@@ -1,4 +1,4 @@
-# pandas correlation  
+# pandas correlation  hpi and mortgage
 import pandas as pd
 import matplotlib.pyplot as plt
 import quandl
