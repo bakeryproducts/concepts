@@ -21,26 +21,28 @@ df['OC_PCT'] = 100 * (df['AC'] - df['AO']) / df['AO']
 df = df[['AC', 'HL_PCT', 'OC_PCT', 'AV']]
 # df.fillna(-99999,inplace=True)
 
-
-forecast_col = 'AC'
-forecast_shift = int(math.ceil(len(df) * .01))
+forecast_col = 'AV'
+forecast_shift = 30  # int(math.ceil(len(df) * .01))
 df['Y'] = df[forecast_col].shift(-forecast_shift)
+xt = df.drop('Y', axis=1)
+dfold = df[:]
+df = df[:-60]
 df.dropna(inplace=True)
-
 X = np.array(df.drop('Y', axis=1))
 # print(df.drop(['AV','AC'],axis=1))
-
 y = np.array(df['Y'])
-
-X = preprocessing.scale(X)
+# X = preprocessing.scale(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2)
 
-clf = svm.SVR()
-# clf = LinearRegression()
+# clf = svm.SVR()
+clf = LinearRegression()
 clf.fit(X_train, y_train)
 acc = clf.score(X_test, y_test)
 
+forec = clf.predict(xt)
+#dfold=dfold[30:]
+dfold['P'] = forec#[:-30]
 print(acc)
-df.plot()
-# plt.show()
+dfold[['P','Y']].plot()
+plt.show()
