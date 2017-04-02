@@ -1,4 +1,4 @@
-# ML google stock
+# ML google stock making prediction
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
