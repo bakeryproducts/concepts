@@ -14,37 +14,48 @@ def knn(data,predict,k=1):
             distances.append((dist,group))
     votes=np.array(sorted(distances))[:,1]
     vote = Counter(votes[:k]).most_common(1)[0][0]
-    return vote
+    confid = Counter(votes[:k]).most_common(1)[0][1]/k
+    return vote,confid*100
 
 df = pd.read_csv('cancer_data.csv')
 df.replace('?',-99999,inplace=True)
 df.drop(['id'],1,inplace=True)
 full_data = df.astype(float).values.tolist()
-random.shuffle(full_data)
 
-testsize=.2
-trainset={2:[],4:[]}
-testset={2:[],4:[]}
+accs = []
+for _ in range(25):
+    random.shuffle(full_data)
 
-l = int(len(full_data)*testsize)
-traindata=full_data[:-l]
-testdata=full_data[-l:]
+    testsize=.2
+    trainset={2:[],4:[]}
+    testset={2:[],4:[]}
 
-for i in traindata:
-    trainset[i[-1]].append(i[:-1])
+    l = int(len(full_data)*testsize)
+    traindata=full_data[:-l]
+    testdata=full_data[-l:]
 
-for i in testdata:
-    testset[i[-1]].append(i[:-1])
+    for i in traindata:
+        trainset[i[-1]].append(i[:-1])
 
-correct = 0
-total=0
+    for i in testdata:
+        testset[i[-1]].append(i[:-1])
 
-for group in testset:
-    for data in testset[group]:
-        vote = knn(trainset,data,k=3)
-        print(int(vote),end='')
-        if group == vote:
-            correct+=1
-        total+=1
+    correct = 0
+    total=0
 
-print(correct/total)
+    for group in testset:
+        for data in testset[group]:
+            vote,conf = knn(trainset,data,k=5)
+            #print(int(vote),' guess by {:.1f} but is '.format(conf),int(group),end='')
+            if group == vote:
+                correct+=1
+            #    print()
+            #else:print('\t WRONG')
+            total+=1
+    accs.append(correct/total)
+    #print(correct/total)
+
+print(accs)
+print(sum(accs)/len(accs))
+
+#0.964028776978417          x25
