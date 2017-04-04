@@ -1,4 +1,5 @@
 # K NN test on cancer data
+# mean acc ?
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
