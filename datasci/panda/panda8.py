@@ -1,4 +1,5 @@
 # pandas rolling stats
+# should give youtube links
 import pandas as pd
 import matplotlib.pyplot as plt
 
