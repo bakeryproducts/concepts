@@ -7,7 +7,6 @@ reveal = {name: hero for name, hero in zip(names, identity)}
 # print(reveal)
 
 # generators
-
 li = [n + 1 for n in range(10)]
 print(li)
 
@@ -22,3 +21,7 @@ my_gen = (i*i for i in li )
 
 for i in my_gen:
     print i
+
+# also packs and unpacks
+a,*b = 'SPAM'
+# a = 'S' and b = ['P','A','M'] ?
