@@ -1,1 +1,1 @@
-Chunks of useful code
+DataSci - data science realted stuff , pandas numpy sklearn, ML
